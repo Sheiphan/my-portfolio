@@ -1,0 +1,8 @@
+<svg width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="400" fill="#262626"/>
+  <text x="50%" y="50%" font-family="system-ui, sans-serif" font-size="24" fill="#a3a3a3" text-anchor="middle" dominant-baseline="middle">
+    Project Image
+  </text>
+  <circle cx="400" cy="180" r="40" fill="none" stroke="#3b82f6" stroke-width="2"/>
+  <path d="M 380 180 L 390 190 L 420 160" stroke="#3b82f6" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
