@@ -28,9 +28,9 @@ export default function NavBar() {
           <Link 
             href="/" 
             className="text-xl font-bold text-gray-100 hover:text-blue-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-neutral-900 rounded-sm px-1"
-            aria-label="Home - AI Engineer Portfolio"
+            aria-label="Home - Sheiphan Joseph Portfolio"
           >
-            AI Engineer
+            Sheiphan Joseph
           </Link>
 
           {/* Mobile menu button */}

@@ -1,6 +1,6 @@
-# AI Engineer Portfolio
+# Sheiphan Joseph - AI Engineer Portfolio
 
-A modern, minimalistic portfolio website built with Next.js, featuring a futuristic dark-mode design. This portfolio showcases AI and machine learning projects, blog posts, and professional experience.
+A modern, minimalistic portfolio website built with Next.js, featuring a futuristic dark-mode design. This portfolio showcases my AI and machine learning projects, technical blog posts, and professional experience in agentic AI, foundation models, and MLOps.
 
 ## Features
 
@@ -169,4 +169,9 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## Contact
 
-For questions or feedback, please reach out via the contact information on the live site.
+**Sheiphan Joseph**
+- Email: sheiphanshaijan@gmail.com
+- Phone: +91 9370896602
+- Location: Bengaluru, India
+- LinkedIn: [Your LinkedIn Profile]
+- GitHub: [Your GitHub Profile]

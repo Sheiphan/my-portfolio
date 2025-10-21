@@ -1,13 +1,13 @@
 ---
-title: "Building AI Applications with LangChain: A Practical Guide"
+title: "Building Production AI Applications with LangChain & LangGraph"
 date: "2025-10-08"
-summary: "A hands-on guide to building production-ready AI applications using LangChain, covering chains, agents, and best practices."
-tags: ["LangChain", "LLMs", "AI Applications", "Python"]
+summary: "Practical insights from building production-ready agentic AI systems using LangChain and LangGraph, based on real-world experience."
+tags: ["LangChain", "LangGraph", "Agentic AI", "Multi-Agent Systems", "Production ML"]
 ---
 
-# Building AI Applications with LangChain: A Practical Guide
+# Building Production AI Applications with LangChain & LangGraph
 
-LangChain has quickly become the go-to framework for building applications powered by large language models. In this post, I'll share practical insights from building several LangChain-based applications.
+After building multiple production AI systems using LangChain and LangGraph - from knowledge bots serving 100+ concurrent users to autonomous research agents - I've learned what it takes to move from prototype to production. Here are the practical insights that matter.
 
 ## What is LangChain?
 

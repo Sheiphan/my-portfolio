@@ -14,7 +14,7 @@ export default function Home() {
           transition={{ duration: 0.5 }}
           className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-gray-100 leading-tight"
         >
-          Hi, I&apos;m an AI Engineer
+          Hi, I&apos;m Sheiphan Joseph
         </motion.h1>
 
         <motion.p
@@ -23,9 +23,9 @@ export default function Home() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-base sm:text-lg md:text-xl text-gray-300 mb-6 sm:mb-8 leading-relaxed"
         >
-          I specialize in building intelligent systems using machine learning and natural language processing.
-          With expertise in deep learning frameworks and large language models, I create innovative solutions
-          that bridge the gap between cutting-edge AI research and real-world applications.
+          Innovative AI Engineer specializing in agentic AI and foundation models like GPT-4o, Gemini, and Deepseek.
+          I build multimodal, autonomous AI systems and orchestrate complex multi-agent workflows with LangChain and LangGraph.
+          Passionate about leveraging AI agents for autonomous problem-solving, self-healing pipelines, and scalable production-ready solutions.
         </motion.p>
 
         <motion.div
