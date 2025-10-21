@@ -18,9 +18,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
     params
 }: {
-    params: { slug: string }
+    params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-    const update = getUpdateBySlug(params.slug);
+    const { slug } = await params;
+    const update = getUpdateBySlug(slug);
 
     return {
         title: update.title,
@@ -42,12 +43,13 @@ export async function generateMetadata({
     };
 }
 
-export default function UpdateDetailPage({
+export default async function UpdateDetailPage({
     params
 }: {
-    params: { slug: string }
+    params: Promise<{ slug: string }>
 }) {
-    const update = getUpdateBySlug(params.slug);
+    const { slug } = await params;
+    const update = getUpdateBySlug(slug);
 
     // Format date for display
     const formattedDate = new Date(update.date).toLocaleDateString('en-US', {

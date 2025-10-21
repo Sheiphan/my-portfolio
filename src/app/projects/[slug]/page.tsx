@@ -19,9 +19,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
     params
 }: {
-    params: { slug: string }
+    params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-    const project = getProjectBySlug(params.slug);
+    const { slug } = await params;
+    const project = getProjectBySlug(slug);
 
     return {
         title: project.title,
@@ -52,12 +53,13 @@ export async function generateMetadata({
     };
 }
 
-export default function ProjectDetailPage({
+export default async function ProjectDetailPage({
     params
 }: {
-    params: { slug: string }
+    params: Promise<{ slug: string }>
 }) {
-    const project = getProjectBySlug(params.slug);
+    const { slug } = await params;
+    const project = getProjectBySlug(slug);
 
     // Format date for display
     const formattedDate = new Date(project.date).toLocaleDateString('en-US', {
