@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -102,20 +101,6 @@ export default async function ProjectDetailPage({
                 <div className="flex flex-wrap items-center gap-4 text-sm sm:text-base text-gray-400 mb-4 sm:mb-6">
                     <time dateTime={project.date}>{formattedDate}</time>
                 </div>
-
-                {/* Project Image */}
-                {project.image && (
-                    <div className="relative w-full h-48 sm:h-64 md:h-96 mb-4 sm:mb-6 rounded-lg overflow-hidden">
-                        <Image
-                            src={project.image}
-                            alt={`${project.title} featured image`}
-                            fill
-                            className="object-cover"
-                            priority
-                            sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1200px"
-                        />
-                    </div>
-                )}
 
                 {/* Tech Tags */}
                 <div className="flex flex-wrap gap-2 mb-4 sm:mb-6" role="list" aria-label="Technologies used">
