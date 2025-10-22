@@ -1,7 +1,6 @@
 "use client";
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Project } from '@/lib/content';
@@ -31,20 +30,6 @@ export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
           style={{ willChange: 'transform' }}
         >
           <Card className="h-full border-neutral-700 bg-neutral-800/50 backdrop-blur hover:shadow-xl hover:shadow-blue-500/10 transition-shadow duration-300 overflow-hidden">
-            {/* Project Image */}
-            {project.image && (
-              <div className="relative w-full h-48 sm:h-56 md:h-48 overflow-hidden">
-                <Image
-                  src={project.image}
-                  alt={`${project.title} preview`}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 400px"
-                  priority={index < 3}
-                />
-              </div>
-            )}
-            
             <CardHeader>
               <CardTitle className="text-lg sm:text-xl group-hover:text-blue-400 transition-colors duration-300">
                 {project.title}
