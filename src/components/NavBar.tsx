@@ -8,12 +8,10 @@ import FlockToggle from "./FlockToggle";
 
 const LINKS = [
   { href: "/", label: "Home" },
-  { href: "/projects", label: "Projects" },
   { href: "/experience", label: "Experience" },
+  { href: "/projects", label: "Projects" },
   { href: "/updates", label: "Updates" },
 ];
-
-const EMAIL = "mailto:sheiphanshaijan@gmail.com";
 
 function Squiggle() {
   return (
@@ -61,14 +59,10 @@ export default function NavBar() {
           ))}
         </ul>
 
-        <a href={EMAIL} className="btn-sticker is-yellow btn-small ml-auto hidden sm:inline-flex md:ml-5" data-mascot="grin">
-          Email me
-        </a>
-
-        <FlockToggle />
-        <span className="ml-auto flex sm:ml-0">
+        <div className="ml-auto flex items-center gap-4 md:ml-3">
+          <FlockToggle />
           <ThemeToggle />
-        </span>
+        </div>
 
         <button
           type="button"
@@ -107,11 +101,6 @@ export default function NavBar() {
                 </Link>
               </li>
             ))}
-            <li>
-              <a href={EMAIL} className="mobile-link" onClick={closeMobileMenu}>
-                Email me
-              </a>
-            </li>
             <li>
               <FlockToggle variant="row" />
             </li>

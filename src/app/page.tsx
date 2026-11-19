@@ -3,6 +3,8 @@ import HeroAgent from "@/components/sketch/HeroAgent";
 import ScrollDoodle from "@/components/sketch/ScrollDoodle";
 import DrawOnView from "@/components/sketch/DrawOnView";
 import ProjectCard from "@/components/ProjectCard";
+import ExperienceTimeline from "@/components/ExperienceTimeline";
+import SocialLinks from "@/components/SocialLinks";
 import UpdateItem from "@/components/UpdateItem";
 import { getAllProjects, getAllUpdates } from "@/lib/content";
 
@@ -28,19 +30,23 @@ export default function Home() {
           </h1>
 
           <p className="hero-intro mt-8">
-            Innovative AI Engineer specializing in agentic AI and foundation models like GPT-4o, Gemini, and Deepseek.
-            I build multimodal, autonomous AI systems and orchestrate complex multi-agent workflows with LangChain and LangGraph.
-            Passionate about leveraging AI agents for autonomous problem-solving, self-healing pipelines, and scalable production-ready solutions.
+            I&apos;m a software engineer who mostly lives on the backend side of AI. At Flexera I build and run the MCP
+            servers and agent services that let LLMs work with real cloud-cost data, plus the auth, tests and Kubernetes
+            plumbing nobody sees but everything needs. I don&apos;t just wire models up, though. I like building them too:
+            I&apos;ve fine-tuned Qwen for work, and for fun I wrote a mixture-of-experts LLM from scratch, trained it on an
+            H100 and kept running ablations until I knew why things worked (or didn&apos;t). Before Flexera I shipped RAG
+            systems and research agents.
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-5">
-            <a href="mailto:sheiphanshaijan@gmail.com" className="btn-sticker" data-mascot="grin">
-              Email me
-            </a>
-            <Link href="/projects" className="btn-outline">
+            <Link href="/projects" className="btn-sticker" data-mascot="grin">
               View My Projects
             </Link>
+            <Link href="/experience" className="btn-outline">
+              My Experience
+            </Link>
           </div>
+          <SocialLinks variant="icons" className="mt-6" />
         </div>
 
         <HeroAgent />
@@ -49,7 +55,21 @@ export default function Home() {
 
     <ScrollDoodle className="ml-[8%] -mt-4" />
 
-    <section aria-labelledby="home-projects" className="mt-6">
+    <section aria-labelledby="home-experience" className="mt-6">
+      <DrawOnView className="section-head">
+        <h2 id="home-experience" className="section-title">
+          <span className="highlight">Experience</span>
+        </h2>
+        <Link href="/experience" className="text-link">
+          See what I built at each role
+        </Link>
+      </DrawOnView>
+      <div className="mt-6">
+        <ExperienceTimeline variant="compact" headingLevel="h3" />
+      </div>
+    </section>
+
+    <section aria-labelledby="home-projects" className="mt-24 lg:mt-32">
       <DrawOnView className="section-head">
         <h2 id="home-projects" className="section-title">
           <span className="highlight">Projects</span>

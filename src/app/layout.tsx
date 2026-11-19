@@ -4,7 +4,9 @@ import "./globals.css";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import Flock from "@/components/sketch/Flock";
+import SpaceSky from "@/components/sketch/SpaceSky";
 import ThemeLab from "@/components/sketch/ThemeLab";
+import { SOCIAL_LINKS } from "@/lib/social";
 
 const atkinson = Atkinson_Hyperlegible({
   variable: "--font-atkinson",
@@ -23,25 +25,25 @@ const marker = Permanent_Marker({
 export const metadata: Metadata = {
   metadataBase: new URL('https://yoursite.com'),
   title: {
-    default: "Sheiphan Joseph - AI Engineer & MLOps Specialist",
+    default: "Sheiphan Joseph - Software Engineer, AI/ML",
     template: "%s | Sheiphan Joseph",
   },
-  description: "Portfolio of Sheiphan Joseph - AI Engineer specializing in agentic AI, foundation models (GPT-4o, Gemini, Deepseek), LangChain, LangGraph, and MLOps. Expert in building autonomous multi-agent systems and production ML pipelines.",
-  keywords: ["Sheiphan Joseph", "AI Engineer", "MLOps", "Data Scientist", "Agentic AI", "LangChain", "LangGraph", "GPT-4", "Foundation Models", "RAG", "Multi-Agent Systems", "AWS", "Machine Learning", "Deep Learning", "NLP", "Computer Vision"],
+  description: "Sheiphan Joseph is a software engineer in Bengaluru who builds the backend side of AI: MCP servers, LLM agents and ML services running in production, with the auth, access control, testing and infrastructure they need. Also builds and trains models from scratch.",
+  keywords: ["Sheiphan Joseph", "Software Engineer", "Backend Engineer", "AI Engineer", "MCP", "Model Context Protocol", "LLM Agents", "Python", "Kubernetes", "AWS", "Terraform", "RAG", "PyTorch", "Mixture of Experts", "Machine Learning"],
   authors: [{ name: "Sheiphan Joseph" }],
   creator: "Sheiphan Joseph",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://yoursite.com",
-    siteName: "Sheiphan Joseph - AI Engineer",
-    title: "Sheiphan Joseph - AI Engineer & MLOps Specialist",
-    description: "Portfolio showcasing AI projects and expertise in agentic AI, foundation models, and production ML systems by Sheiphan Joseph",
+    siteName: "Sheiphan Joseph",
+    title: "Sheiphan Joseph - Software Engineer, AI/ML",
+    description: "Software engineer building MCP servers, LLM agents and ML services that run in production.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sheiphan Joseph - AI Engineer",
-    description: "AI Engineer specializing in agentic AI, foundation models, and MLOps",
+    title: "Sheiphan Joseph - Software Engineer, AI/ML",
+    description: "Software engineer building MCP servers, LLM agents and ML services that run in production.",
   },
   robots: {
     index: true,
@@ -69,26 +71,25 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Sheiphan Joseph",
-    jobTitle: "Sr. AI Engineer | MLOps | Data Scientist",
-    description: "Innovative AI Engineer at the forefront of foundation model research, specializing in agentic AI and next-generation LLMs. Expert in building multimodal, autonomous AI systems and orchestrating complex multi-agent workflows.",
+    jobTitle: "Software Engineer - AI/ML",
+    worksFor: { "@type": "Organization", name: "Flexera" },
+    description: "Software engineer who builds the backend side of AI: MCP servers, LLM agents and ML services running in production.",
     url: "https://yoursite.com",
     email: "sheiphanshaijan@gmail.com",
-    telephone: "+919370896602",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Bengaluru",
       addressCountry: "IN"
     },
-    sameAs: [
-      "https://github.com/yourusername",
-      "https://linkedin.com/in/yourusername",
-    ],
+    sameAs: SOCIAL_LINKS.map((link) => link.href),
     knowsAbout: [
-      "Agentic AI",
-      "Foundation Models",
-      "GPT-4",
-      "Gemini",
-      "Deepseek",
+      "Backend Engineering",
+      "Model Context Protocol (MCP)",
+      "LLM Agents",
+      "Python",
+      "Kubernetes",
+      "Terraform",
+      "OAuth and JWT",
       "LangChain",
       "LangGraph",
       "Multi-Agent Systems",
@@ -116,6 +117,7 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-screen flex-col">
+        <SpaceSky />
         <Flock />
         <a href="#main-content" className="skip-link">
           Skip to main content

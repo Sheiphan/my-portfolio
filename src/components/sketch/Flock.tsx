@@ -229,7 +229,7 @@ export default function Flock() {
         // The glow sits on the round tip at the top of the element (or its centre if it is a dot).
         .map((r) => ({ x: r.left + r.width / 2, y: Math.min(r.top + r.width / 2, r.top + r.height / 2) + sy, r: Math.max(4, r.width / 2) }));
     };
-    let roostBox = emptyBox();
+    const roostBox = emptyBox();
     /** Whether the name (0) and the figure (1) are on screen. */
     const groupVisible = [false, false];
     let nextHopAt = 0;
@@ -463,111 +463,6 @@ export default function Flock() {
       return thinned;
     };
 
-    // Landing spots on the planner figure: the crown of its head and the tops of its tool boxes.
-    const sampleRoosts = (): [number, number][] => {
-      const out: [number, number][] = [];
-      const box = emptyBox();
-      const sy = window.scrollY;
-      // Nothing roosts on the planner's head itself (head outline, hair, antenna): only on the tools.
-      const headEl = document.querySelector('[data-flock-origin]');
-      const hr = headEl?.getBoundingClientRect();
-      const onHead = (r: DOMRect) =>
-        !!hr && r.left < hr.right + 10 && r.right > hr.left - 10 && r.top < hr.bottom + 10 && r.bottom > hr.top - 40;
-      document.querySelectorAll<Element>('[data-flock-roost]').forEach((el) => {
-        const r = el.getBoundingClientRect();
-        if (!r.width || !r.height) return;
-        if (el.contains(headEl) || headEl?.contains(el) || onHead(r)) return;
-        const n = Math.max(0, Math.min(10, parseInt(el.getAttribute('data-roost-count') ?? '2', 10) || 0));
-        if (!n) return;
-        box.left = Math.min(box.left, r.left);
-        box.right = Math.max(box.right, r.right);
-        box.top = Math.min(box.top, r.top + sy);
-        box.bottom = Math.max(box.bottom, r.bottom + sy);
-        const kind = el.getAttribute('data-flock-roost');
-        if (kind === 'path') {
-          // Any doodled outline (curly hair, a cloud, a squiggle): sit on the crests of its top
-          // contour. Sampled once here from the SVG geometry, never per frame.
-          const geos = (
-            el instanceof SVGGeometryElement ? [el] : Array.from(el.querySelectorAll('path, polyline, polygon, line, circle, ellipse'))
-          ) as SVGGeometryElement[];
-          const x0 = Math.floor(r.left) - 2;
-          const cols = Math.ceil(r.width) + 4;
-          const top = new Float32Array(cols).fill(Infinity);
-          let half = 2;
-          for (const g of geos) {
-            const m = g.getScreenCTM?.();
-            const len = g.getTotalLength?.() ?? 0;
-            if (!m || !len) continue;
-            half = Math.max(half, ((parseFloat(getComputedStyle(g).strokeWidth) || 3) * Math.hypot(m.a, m.b)) / 2);
-            for (let d = 0; d <= len; d += 1.5) {
-              const p = g.getPointAtLength(d);
-              const x = m.a * p.x + m.c * p.y + m.e;
-              const y = m.b * p.x + m.d * p.y + m.f;
-              const c = Math.round(x) - x0;
-              if (c >= 0 && c < cols && y < top[c]) top[c] = y;
-            }
-          }
-          const reach = Math.ceil(PERCH_REACH + 1);
-          const seatY = (c: number) => {
-            let mt = Infinity;
-            for (let k = c - reach; k <= c + reach; k++) if (k >= 0 && k < cols) mt = Math.min(mt, top[k]);
-            return mt;
-          };
-          // Crests: columns that are the highest point within a bird's width either side.
-          const crests: number[] = [];
-          for (let c = 0; c < cols; c++) {
-            if (!Number.isFinite(top[c])) continue;
-            if (seatY(c) < top[c] - 0.5) continue;
-            if (crests.length && c - crests[crests.length - 1] < reach * 2) continue;
-            crests.push(c);
-          }
-          const k = Math.min(n, crests.length);
-          for (let i = 0; i < k; i++) {
-            const c = crests[k > 1 ? Math.round((i * (crests.length - 1)) / (k - 1)) : Math.floor(crests.length / 2)];
-            out.push([c + x0, seatY(c) - half - 2 + sy]);
-          }
-        } else if (kind === 'arc') {
-          // Along the crown of the inscribed ellipse, leaving the very top (antenna) free.
-          const cx = r.left + r.width / 2;
-          const cy = r.top + r.height / 2 + sy;
-          const a = r.width / 2;
-          const b = r.height / 2;
-          const from = (205 * Math.PI) / 180;
-          const to = (335 * Math.PI) / 180;
-          const gap = (22 * Math.PI) / 180; // either side of 270 degrees
-          const usable = to - from - gap * 2;
-          const topAt = (x: number) => cy - b * Math.sqrt(Math.max(0, 1 - ((x - cx) / a) ** 2));
-          for (let i = 0; i < n; i++) {
-            let th = from + (n > 1 ? (i / (n - 1)) * usable : usable / 2);
-            if (th > Math.PI * 1.5 - gap) th += gap * 2;
-            const x = cx + Math.cos(th) * a;
-            // Sit above the highest outline under the wings (the stroke is ~4 px thick).
-            const y = Math.min(topAt(x - PERCH_REACH - 1), topAt(x), topAt(x + PERCH_REACH + 1)) - 5;
-            out.push([x, y]);
-          }
-        } else {
-          // Along the top edge, inset from the corners, clear of any hand-lettered label on it.
-          const labels = Array.from(el.closest('svg')?.querySelectorAll('text') ?? []).map((t) => t.getBoundingClientRect());
-          const y = r.top - 5; // viewport
-          const free: number[] = [];
-          for (let x = r.left + r.width * 0.12; x <= r.right - r.width * 0.12; x += 3) {
-            const hit = labels.some(
-              (l) => x + PERCH_REACH + 3 > l.left && x - PERCH_REACH - 3 < l.right && y + 2 > l.top && y - 10 < l.bottom,
-            );
-            if (!hit) free.push(x);
-          }
-          if (!free.length) return;
-          const k = Math.min(n, free.length);
-          for (let i = 0; i < k; i++) {
-            const x = k > 1 ? free[Math.round((i * (free.length - 1)) / (k - 1))] : free[Math.floor(free.length / 2)];
-            out.push([x, y + sy]);
-          }
-        }
-      });
-      roostBox = box;
-      return out;
-    };
-
     const enterFromSide = (b: Bird) => {
       b.x = Math.random() < 0.5 ? rand(-40, 0) : rand(W, W + 40);
       b.y = rand(0, H * 0.6);
@@ -618,8 +513,8 @@ export default function Flock() {
       sampleBeacons();
       nameBox = emptyBox();
       const named = samplePerches();
-      // Roosts on the planner only make sense next to a name to perch on.
-      const roosts = named.length ? sampleRoosts() : [];
+      // No roosts on the planner's tools: birds there were a distraction.
+      const roosts: [number, number][] = [];
       const perches = named.concat(roosts);
       const o = origin();
       const now = performance.now();
@@ -1108,15 +1003,18 @@ export default function Flock() {
         const visible = formation.length > 0 && box.bottom - sy > -40 && box.top - sy < H + 40;
         if (visible === groupVisible[g]) continue;
         groupVisible[g] = visible;
+        // Perches are anchored to the page, so perched birds simply scroll away and back with
+        // the name. The gathering flight only happens when the page loads. A bird that is still
+        // waiting off screen (the page opened scrolled down) is put on its perch, not flown in.
+        if (!visible) continue;
         for (const b of formation) {
           if (b.roost !== (g === 1)) continue;
-          if (visible) {
-            // Return from the nearest side of the screen.
-            if (b.mode === 'hidden' || b.mode === 'leave') enterFromSide(b);
-          } else if (b.mode !== 'hidden') {
-            b.mode = 'leave';
-            b.vx += rand(-2, 2);
-            b.vy -= rand(2, 5);
+          if (b.mode === 'hidden' || b.mode === 'leave') {
+            b.x = b.tx;
+            b.y = b.ty - sy;
+            b.vx = b.vy = 0;
+            b.fold = 1;
+            b.mode = 'sit';
           }
         }
       }

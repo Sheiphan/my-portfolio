@@ -24,6 +24,18 @@ export interface Update {
   date: string;
   summary: string;
   tags?: string[];
+  readingMinutes: number;
+}
+
+/** Minutes to read, at about 230 words a minute for prose and 2 seconds a code line. */
+export function readingMinutes(markdown: string): number {
+  let codeLines = 0;
+  const prose = markdown.replace(/```[\s\S]*?```/g, (block) => {
+    codeLines += block.split('\n').length - 2;
+    return ' ';
+  });
+  const words = prose.split(/\s+/).filter((w) => /[A-Za-z0-9]/.test(w)).length;
+  return Math.max(1, Math.round(words / 230 + codeLines / 30));
 }
 
 export interface UpdateWithContent extends Update {
@@ -108,15 +120,16 @@ export function getAllUpdates(): Update[] {
     .map(filename => {
       const filePath = path.join(updatesDir, filename);
       const fileContent = fs.readFileSync(filePath, 'utf-8');
-      const { data } = matter(fileContent);
+      const { data, content } = matter(fileContent);
       const slug = filename.replace(/\.mdx?$/, '');
-      
+
       return {
         slug,
         title: data.title || '',
         date: data.date || '',
         summary: data.summary || '',
         tags: data.tags,
+        readingMinutes: readingMinutes(content),
       } as Update;
     });
   
@@ -145,5 +158,6 @@ export function getUpdateBySlug(slug: string): UpdateWithContent {
     date: data.date || '',
     summary: data.summary || '',
     tags: data.tags,
+    readingMinutes: readingMinutes(content),
   } as UpdateWithContent;
 }

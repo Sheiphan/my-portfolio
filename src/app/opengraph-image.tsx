@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Sheiphan Joseph - AI Engineer & MLOps Specialist";
+export const alt = "Sheiphan Joseph - Software Engineer, AI/ML";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -37,7 +37,7 @@ export default function OpengraphImage() {
           </div>
         </div>
         <div style={{ marginTop: 44, fontSize: 40, fontWeight: 700, maxWidth: 900, lineHeight: 1.25 }}>
-          Sr. AI Engineer building agentic AI, foundation-model systems and MLOps.
+          Software engineer building MCP servers, LLM agents and ML services that run in production.
         </div>
         <div style={{ display: "flex", marginTop: 40 }}>
           <div

@@ -1,11 +1,10 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { MDXRemote } from 'next-mdx-remote/rsc';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import Doodle from '@/components/sketch/Doodle';
 import { doodleForProject } from '@/components/sketch/doodles';
-import remarkGfm from 'remark-gfm';
-import rehypeHighlight from 'rehype-highlight';
+import MarkdownDoc from '@/components/MarkdownDoc';
+import TableOfContents from '@/components/TableOfContents';
 import { getAllProjects, getProjectBySlug } from '@/lib/content';
 
 // Generate static params for all projects
@@ -30,13 +29,13 @@ export async function generateMetadata({
         title: project.title,
         description: project.description,
         keywords: project.tech,
-        authors: [{ name: "AI Engineer" }],
+        authors: [{ name: "Sheiphan Joseph" }],
         openGraph: {
             title: project.title,
             description: project.description,
             type: "article",
             publishedTime: project.date,
-            authors: ["AI Engineer"],
+            authors: ["Sheiphan Joseph"],
             images: project.image ? [
                 {
                     url: project.image,
@@ -117,17 +116,10 @@ export default async function ProjectDetailPage({
                 </figure>
             </header>
 
-            <article className="prose prose-zine prose-base mt-16 max-w-[72ch] md:prose-lg lg:mt-24">
-                <MDXRemote
-                    source={project.content}
-                    options={{
-                        mdxOptions: {
-                            remarkPlugins: [remarkGfm],
-                            rehypePlugins: [rehypeHighlight],
-                        },
-                    }}
-                />
-            </article>
+            <div className="mt-16 flex flex-col lg:mt-24 xl:grid xl:grid-cols-[minmax(0,72ch)_15rem] xl:justify-between xl:gap-16">
+                <MarkdownDoc source={project.content} />
+                <TableOfContents articleId="doc" />
+            </div>
         </div>
     );
 }

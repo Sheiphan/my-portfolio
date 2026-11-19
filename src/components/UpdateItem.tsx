@@ -24,9 +24,12 @@ export default function UpdateItem({ update, headingLevel = 'h2' }: UpdateItemPr
       redraw
       className="log-entry group relative grid gap-2 pb-9 pt-7 md:grid-cols-[10rem_minmax(0,1fr)] md:gap-10"
     >
-      <time dateTime={update.date} className="log-date">
-        {formattedDate}
-      </time>
+      <div>
+        <time dateTime={update.date} className="log-date">
+          {formattedDate}
+        </time>
+        <p className="log-read">{update.readingMinutes} min read</p>
+      </div>
       <div className="max-w-[68ch]" data-perch="">
         <Heading className="log-title">
           <Link href={`/updates/${update.slug}`} className="stretched-link">

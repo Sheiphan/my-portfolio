@@ -1,3 +1,8 @@
+export interface RoleProject {
+  label: string;
+  href: string;
+}
+
 export interface Role {
   title: string;
   company: string;
@@ -9,7 +14,14 @@ export interface Role {
   location: string;
   /** Work arrangement, when known. */
   mode?: string;
+  /** One sentence: what the job was. Shown on the home page too. */
+  summary: string;
+  /** What was built, shown on the Experience page. */
+  highlights?: string[];
   skills?: string[];
+  projects?: RoleProject[];
+  /** Posts written from what was learned in the role. */
+  writing?: RoleProject[];
 }
 
 /** Newest first. */
@@ -21,6 +33,23 @@ export const experience: Role[] = [
     start: '2026-01',
     location: 'Bengaluru, Karnataka, India',
     mode: 'Hybrid',
+    summary:
+      "I build the backend services that let LLM agents work with Flexera's cloud-cost data in production: MCP servers, agents and the auth, access control and infrastructure around them.",
+    highlights: [
+      'Built and own the FinOps MCP server, a Python service that gives LLM agents cloud-cost queries, cost dimensions and anomaly root-cause analysis as tools. It runs on Kubernetes behind the company-wide MCP gateway and is live in production in three regions.',
+      "Secured every tool call end to end: the server verifies the gateway's signed token, mints its own service-to-service tokens, and checks a per-org feature flag and the caller's privileges before any tool runs. It is read-only by default, and cost queries are limited to the billing centers the caller can see.",
+      'Registered and rolled out the server on the MCP gateway region by region, and kept it healthy with contract tests, a regression suite run against staging through the gateway, and dependency upgrades that clear security advisories.',
+      'Built an earlier multi-server MCP host with FastMCP, one HTTP service mounting several MCP servers, with JWT and ACL checks and Terraform-managed AWS infrastructure.',
+      "Worked on the GenAI assistant's agents: connected the documentation agent to Amazon Q Business and built an ECS right-sizing agent.",
+      'On the classical-ML side, added MLflow experiment tracking to the ML services and moved training to the Databricks 17.3 LTS ML runtime.',
+    ],
+    skills: ['Python', 'MCP', 'LLM agents', 'Kubernetes', 'AWS', 'Terraform', 'OAuth / JWT', 'Databricks', 'MLflow'],
+    writing: [
+      {
+        label: 'Building MCP Servers That Survive Production: 12 Design Decisions',
+        href: '/updates/production-ready-mcp-servers',
+      },
+    ],
   },
   {
     title: 'AI Engineer',
@@ -29,7 +58,9 @@ export const experience: Role[] = [
     start: '2025-06',
     end: '2025-12',
     location: 'Remote',
+    summary: 'Built generative-AI systems on AWS, including an autonomous deep research agent on Bedrock and SageMaker.',
     skills: ['Generative AI', 'Amazon Web Services (AWS)'],
+    projects: [{ label: 'Deep Research Agent', href: '/projects/deep-research-agent-qubitz' }],
   },
   {
     title: 'NLP Prompt Engineer',
@@ -38,6 +69,7 @@ export const experience: Role[] = [
     start: '2025-01',
     end: '2025-04',
     location: 'Remote',
+    summary: 'Prompt engineering and NLP work with large language models.',
     skills: ['Prompt Engineering', 'Large Language Models (LLM)'],
   },
   {
@@ -48,7 +80,13 @@ export const experience: Role[] = [
     end: '2025-01',
     location: 'Bangalore Urban, Karnataka, India',
     mode: 'On-site',
+    summary:
+      'Built an agentic RAG knowledge bot with locally hosted LLMs and fine-tuned a Qwen 1.5 4B model with FSDP and DDP, both deployed on AWS.',
     skills: ['Generative AI', 'Docker Swarm'],
+    projects: [
+      { label: 'Knowledge Bot', href: '/projects/knowledge-bot-edtech' },
+      { label: 'Fine-tuned Qwen model', href: '/projects/fine-tuned-qwen-model' },
+    ],
   },
 ];
 

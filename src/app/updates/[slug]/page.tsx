@@ -1,9 +1,8 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import { ArrowLeft } from 'lucide-react';
-import remarkGfm from 'remark-gfm';
-import rehypeHighlight from 'rehype-highlight';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import MarkdownDoc from '@/components/MarkdownDoc';
+import TableOfContents from '@/components/TableOfContents';
 import { getAllUpdates, getUpdateBySlug } from '@/lib/content';
 
 // Generate static params for all updates
@@ -28,13 +27,13 @@ export async function generateMetadata({
         title: update.title,
         description: update.summary,
         keywords: update.tags || [],
-        authors: [{ name: "AI Engineer" }],
+        authors: [{ name: "Sheiphan Joseph" }],
         openGraph: {
             title: update.title,
             description: update.summary,
             type: 'article',
             publishedTime: update.date,
-            authors: ["AI Engineer"],
+            authors: ["Sheiphan Joseph"],
         },
         twitter: {
             card: "summary_large_image",
@@ -51,6 +50,11 @@ export default async function UpdateDetailPage({
 }) {
     const { slug } = await params;
     const update = getUpdateBySlug(slug);
+    // Updates are sorted newest first.
+    const all = getAllUpdates();
+    const at = all.findIndex((u) => u.slug === slug);
+    const newer = at > 0 ? all[at - 1] : undefined;
+    const older = at >= 0 ? all[at + 1] : undefined;
 
     const formattedDate = new Date(update.date).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -71,6 +75,8 @@ export default async function UpdateDetailPage({
                 </h1>
                 <p className="mt-6 text-[var(--color-ink-muted)]">
                     <time dateTime={update.date}>{formattedDate}</time>
+                    <span aria-hidden="true"> · </span>
+                    {update.readingMinutes} min read
                 </p>
                 {update.tags && update.tags.length > 0 && (
                     <ul className="mt-5 flex flex-wrap gap-2" aria-label="Tags">
@@ -83,17 +89,33 @@ export default async function UpdateDetailPage({
                 )}
             </header>
 
-            <article className="prose prose-zine prose-base mt-14 max-w-[72ch] md:prose-lg lg:mt-20">
-                <MDXRemote
-                    source={update.content}
-                    options={{
-                        mdxOptions: {
-                            remarkPlugins: [remarkGfm],
-                            rehypePlugins: [rehypeHighlight],
-                        },
-                    }}
-                />
-            </article>
+            <div className="mt-14 flex flex-col lg:mt-20 xl:grid xl:grid-cols-[minmax(0,72ch)_15rem] xl:justify-between xl:gap-16">
+                <MarkdownDoc source={update.content} />
+                <TableOfContents articleId="doc" />
+            </div>
+
+            {(older || newer) && (
+                <nav aria-label="More updates" className="post-nav mt-20 max-w-[72ch]">
+                    {older ? (
+                        <Link href={`/updates/${older.slug}`} className="post-nav-link" rel="prev">
+                            <span className="post-nav-dir">
+                                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                                Older post
+                            </span>
+                            <span className="post-nav-title">{older.title}</span>
+                        </Link>
+                    ) : <span />}
+                    {newer && (
+                        <Link href={`/updates/${newer.slug}`} className="post-nav-link is-next" rel="next">
+                            <span className="post-nav-dir">
+                                Newer post
+                                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                            </span>
+                            <span className="post-nav-title">{newer.title}</span>
+                        </Link>
+                    )}
+                </nav>
+            )}
         </div>
     );
 }

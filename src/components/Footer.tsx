@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import DrawOnView from '@/components/sketch/DrawOnView';
 import { roughRect, roughLine } from '@/components/sketch/rough';
-import CopyEmail from '@/components/CopyEmail';
+import SocialLinks from '@/components/SocialLinks';
 
 /** The closing panel: how to reach Sheiphan, with a doodled envelope. */
 export default function Footer() {
@@ -17,22 +17,12 @@ export default function Footer() {
           <h2 className="font-[family-name:var(--font-marker)] text-[clamp(2rem,4vw,3rem)] leading-none">
             <span className="highlight">Contact</span>
           </h2>
-          <a
-            href="mailto:sheiphanshaijan@gmail.com"
-            className="mt-7 inline-block text-[clamp(1.3rem,3vw,2.2rem)] font-bold leading-tight underline decoration-[var(--color-pink)] decoration-[3px] underline-offset-[0.2em] [overflow-wrap:anywhere] hover:decoration-[var(--color-teal)]"
-            data-mascot="grin"
-            data-perch=""
-          >
-            sheiphanshaijan@gmail.com
-          </a>
-          <p className="mt-5">
-            <CopyEmail email="sheiphanshaijan@gmail.com" />
-          </p>
-          <p className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-[var(--color-ink-soft)]">
-            <a href="tel:+919370896602" className="text-link">
-              +91 9370896602
+          <SocialLinks variant="labeled" className="mt-8" />
+          <p className="mt-5 text-[var(--color-ink-soft)]">Bengaluru, India</p>
+          <p className="mt-1 text-[0.95rem]">
+            <a href="mailto:sheiphanshaijan@gmail.com" className="footer-email">
+              sheiphanshaijan@gmail.com
             </a>
-            <span>Bengaluru, India</span>
           </p>
         </div>
         <svg className="hidden h-auto w-44 overflow-visible md:block" viewBox="0 0 120 90" aria-hidden="true" strokeLinecap="round" strokeLinejoin="round">

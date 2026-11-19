@@ -8,6 +8,8 @@ const DESCRIPTIONS: Record<DoodleKind, string> = {
   rag: 'Doodle: documents are indexed, retrieved and passed to an LLM, which can re-query before it answers.',
   finetune: 'Doodle, illustrative: training loss falling across fine-tuning, preference alignment and quantization.',
   loop: 'Doodle: an agent loop that perceives the screen, plans, and acts, then repeats.',
+  moe: 'Doodle: a router sends each token to its top two of four experts, whose outputs are summed.',
+  speech: 'Doodle: a Markdown file is read by a local voice model, and word timings flow back to highlight each word as it is spoken.',
 };
 
 const INK = 'var(--color-ink)';
@@ -155,6 +157,61 @@ function drawing(kind: DoodleKind, seed: number) {
           <Label x={334} y={212} order={at() - 3}>Plan</Label>
           <Label x={148} y={212} order={at() - 1}>Act</Label>
           {stroke(`M218 140 L232 152 L218 164 ${roughLine(238, 166, 262, 166, s(5), 1)}`)}
+        </>
+      );
+    }
+    case 'moe': {
+      const experts = [22, 92, 162, 232];
+      const chosen = new Set([1, 3]);
+      return (
+        <>
+          {stroke(roughRect(10, 128, 90, 48, s(1)))}
+          <Label x={55} y={159} order={at() - 1}>Token</Label>
+          {stroke(`${roughLine(102, 152, 134, 152, s(2), 2)} ${arrowHead(138, 152, 120, 152, 10)}`)}
+          {stroke(roughRect(142, 126, 98, 52, s(3)))}
+          <Label x={191} y={159} order={at() - 1}>Router</Label>
+          {experts.map((y, n) =>
+            stroke(
+              doodleArrow([242, 152], [264, 152], [266, y + 20], [288, y + 20], 9),
+              chosen.has(n) ? (n === 1 ? TEAL : PINK) : INK,
+              chosen.has(n) ? 3.5 : 1.75,
+            ),
+          )}
+          {highlight(290, 98, 94, 28)}
+          {highlight(290, 238, 94, 28)}
+          {experts.map((y, n) => stroke(roughRect(292, y, 90, 40, s(4 + n)), INK, chosen.has(n) ? 3.5 : 2))}
+          {experts.map((y, n) => (
+            <Label key={`e${n}`} x={337} y={y + 27} order={at() - 1} size={17}>
+              {`Expert ${n + 1}`}
+            </Label>
+          ))}
+          {stroke(doodleArrow([384, 112], [412, 112], [420, 130], [428, 140], 9), TEAL, 2.75)}
+          {stroke(doodleArrow([384, 252], [412, 252], [420, 178], [428, 166], 9), PINK, 2.75)}
+          {stroke(roughCircle(448, 153, 22, s(9)))}
+          <Label x={448} y={160} order={at() - 1}>Σ</Label>
+          <Label x={191} y={202} order={at() - 1} size={16}>picks top-2</Label>
+        </>
+      );
+    }
+    case 'speech': {
+      return (
+        <>
+          {stroke(roughRect(18, 60, 168, 200, s(1)))}
+          <Label x={30} y={52} order={at() - 1} anchor="start" size={17}>README.md</Label>
+          <Label x={34} y={98} order={at() - 1} anchor="start">{'# Intro'}</Label>
+          {highlight(64, 128, 64, 24)}
+          {stroke(roughLine(34, 140, 168, 140, s(2), 1), INK, 2.5)}
+          {stroke(roughLine(34, 174, 150, 174, s(3), 1), INK, 2.5)}
+          {stroke(roughLine(34, 208, 164, 208, s(4), 1), INK, 2.5)}
+          {stroke(roughLine(34, 240, 120, 240, s(5), 1), INK, 2.5)}
+          {stroke(`${roughLine(190, 160, 226, 160, s(6), 2)} ${arrowHead(230, 160, 212, 160, 10)}`)}
+          {stroke(roughRect(234, 134, 100, 52, s(7)))}
+          <Label x={284} y={167} order={at() - 1}>Kokoro</Label>
+          {stroke(`${roughLine(338, 160, 352, 160, s(8), 1)} ${arrowHead(356, 160, 344, 160, 9)}`)}
+          {stroke('M362 160 L372 128 L384 192 L396 116 L408 204 L420 136 L432 184 L444 146 L456 172 L468 160', PINK, 3.5)}
+          <Label x={415} y={236} order={at() - 1} size={17}>local voice</Label>
+          {stroke(doodleArrow([412, 110], [404, 30], [150, 26], [104, 122], 10), TEAL, 2.75)}
+          <Label x={268} y={30} order={at() - 1} size={16}>word timings</Label>
         </>
       );
     }
