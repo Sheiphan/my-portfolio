@@ -1,66 +1,66 @@
-"use client";
-
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Update } from '@/lib/content';
+import type { CSSProperties } from 'react';
+import type { Update } from '@/lib/content';
+import DrawOnView from '@/components/sketch/DrawOnView';
 
 interface UpdateItemProps {
   update: Update;
   index?: number;
+  headingLevel?: 'h2' | 'h3';
 }
 
-export default function UpdateItem({ update, index = 0 }: UpdateItemProps) {
-  // Format date to readable format
+/** One entry in the zine's log: a marker date, the post, a hand-drawn rule beneath. */
+export default function UpdateItem({ update, headingLevel = 'h2' }: UpdateItemProps) {
+  const Heading = headingLevel;
   const formattedDate = new Date(update.date).toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
   });
 
   return (
-    <motion.article
-      initial={{ opacity: 0, x: -20 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="border-b border-neutral-700 pb-6 last:border-b-0"
+    <DrawOnView
+      as="article"
+      redraw
+      className="log-entry group relative grid gap-2 pb-9 pt-7 md:grid-cols-[10rem_minmax(0,1fr)] md:gap-10"
     >
-      <Link 
-        href={`/updates/${update.slug}`}
-        className="group block focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-neutral-900 rounded-md p-2 -m-2"
-        aria-label={`Read update: ${update.title}`}
+      <time dateTime={update.date} className="log-date">
+        {formattedDate}
+      </time>
+      <div className="max-w-[68ch]" data-perch="">
+        <Heading className="log-title">
+          <Link href={`/updates/${update.slug}`} className="stretched-link">
+            <span className="title-mark">{update.title}</span>
+          </Link>
+        </Heading>
+        <p className="mt-2 text-[var(--color-ink-soft)]">{update.summary}</p>
+        {update.tags && update.tags.length > 0 && (
+          <ul className="mt-4 flex flex-wrap gap-2" aria-label="Tags">
+            {update.tags.map((tag) => (
+              <li key={tag} className="tool-chip">
+                {tag}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <svg
+        className="pointer-events-none absolute bottom-0 left-0 h-2 w-full overflow-visible"
+        viewBox="0 0 100 8"
+        preserveAspectRatio="none"
+        aria-hidden="true"
       >
-        <motion.div
-          whileHover={{ x: 4 }}
-          transition={{ duration: 0.2 }}
-        >
-          <h2 className="text-xl sm:text-2xl font-semibold mb-2 group-hover:text-blue-400 transition-colors duration-300">
-            {update.title}
-          </h2>
-          <time 
-            className="text-sm text-gray-400 mb-3 block"
-            dateTime={update.date}
-          >
-            {formattedDate}
-          </time>
-          <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-            {update.summary}
-          </p>
-          {update.tags && update.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-3" role="list" aria-label="Tags">
-              {update.tags.map((tag) => (
-                <span
-                  key={tag}
-                  role="listitem"
-                  className="text-xs px-2 py-1 bg-neutral-800 text-gray-400 rounded transition-colors duration-200 group-hover:bg-neutral-700"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-        </motion.div>
-      </Link>
-    </motion.article>
+        <path
+          d="M0 4 C20 2.5 40 5.5 60 4 S90 2.8 100 4.4"
+          pathLength={1}
+          className="ink-stroke"
+          fill="none"
+          stroke="var(--color-ink)"
+          strokeWidth={2}
+          strokeLinecap="round"
+          style={{ '--i': 0, '--draw-dur': '900ms' } as CSSProperties}
+        />
+      </svg>
+    </DrawOnView>
   );
 }

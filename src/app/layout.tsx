@@ -1,17 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Atkinson_Hyperlegible, Permanent_Marker } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import Flock from "@/components/sketch/Flock";
+import ThemeLab from "@/components/sketch/ThemeLab";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const atkinson = Atkinson_Hyperlegible({
+  variable: "--font-atkinson",
   subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const marker = Permanent_Marker({
+  variable: "--font-permanent-marker",
   subsets: ["latin"],
+  weight: "400",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -31,20 +37,11 @@ export const metadata: Metadata = {
     siteName: "Sheiphan Joseph - AI Engineer",
     title: "Sheiphan Joseph - AI Engineer & MLOps Specialist",
     description: "Portfolio showcasing AI projects and expertise in agentic AI, foundation models, and production ML systems by Sheiphan Joseph",
-    images: [
-      {
-        url: "/images/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Sheiphan Joseph - AI Engineer Portfolio",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Sheiphan Joseph - AI Engineer",
     description: "AI Engineer specializing in agentic AI, foundation models, and MLOps",
-    images: ["/images/og-image.png"],
   },
   robots: {
     index: true,
@@ -58,6 +55,9 @@ export const metadata: Metadata = {
     },
   },
 };
+
+// Runs before first paint so the page never flashes the wrong theme.
+const themeScript = `try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t;if(localStorage.getItem('flock')==='off'){document.documentElement.dataset.flock='off'}}catch(e){}`;
 
 export default function RootLayout({
   children,
@@ -107,28 +107,25 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`${atkinson.variable} ${marker.variable}`} suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-900 text-gray-200 min-h-screen flex flex-col`}
-      >
-        {/* Skip to main content link for accessibility */}
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-blue-500 focus:text-white focus:rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-neutral-900"
-        >
+      <body className="flex min-h-screen flex-col">
+        <Flock />
+        <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
         <NavBar />
-        <main id="main-content" className="flex-1 container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <main id="main-content" className="mx-auto w-full max-w-[1440px] flex-1 px-4 sm:px-8 lg:px-14">
           {children}
         </main>
         <Footer />
+        {process.env.NODE_ENV !== "production" && <ThemeLab />}
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import { ArrowLeft } from 'lucide-react';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import { getAllUpdates, getUpdateBySlug } from '@/lib/content';
@@ -51,7 +52,6 @@ export default async function UpdateDetailPage({
     const { slug } = await params;
     const update = getUpdateBySlug(slug);
 
-    // Format date for display
     const formattedDate = new Date(update.date).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -59,58 +59,31 @@ export default async function UpdateDetailPage({
     });
 
     return (
-        <div className="max-w-4xl mx-auto">
-            {/* Back to Updates Link */}
-            <Link
-                href="/updates"
-                className="inline-flex items-center text-gray-400 hover:text-gray-200 transition-colors mb-6 sm:mb-8 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-neutral-900 rounded-md px-2 py-1 -ml-2"
-                aria-label="Back to updates list"
-            >
-                <svg
-                    className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 19l-7-7 7-7"
-                    />
-                </svg>
+        <div className="page-top">
+            <Link href="/updates" className="back-link">
+                <ArrowLeft className="h-5 w-5" aria-hidden="true" />
                 Back to Updates
             </Link>
 
-            {/* Post Header */}
-            <header className="mb-6 sm:mb-8">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 leading-tight">
-                    {update.title}
+            <header className="mt-8 max-w-[56rem]">
+                <h1 className="detail-title">
+                    <span className="title-mark is-on">{update.title}</span>
                 </h1>
-
-                <div className="flex flex-wrap items-center gap-4 text-sm sm:text-base text-gray-400 mb-4 sm:mb-6">
+                <p className="mt-6 text-[var(--color-ink-muted)]">
                     <time dateTime={update.date}>{formattedDate}</time>
-                </div>
-
-                {/* Tags */}
+                </p>
                 {update.tags && update.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4 sm:mb-6" role="list" aria-label="Tags">
+                    <ul className="mt-5 flex flex-wrap gap-2" aria-label="Tags">
                         {update.tags.map((tag) => (
-                            <span
-                                key={tag}
-                                role="listitem"
-                                className="px-2.5 py-1 bg-neutral-800 text-gray-300 rounded-full text-xs sm:text-sm"
-                            >
+                            <li key={tag} className="tool-chip">
                                 {tag}
-                            </span>
+                            </li>
                         ))}
-                    </div>
+                    </ul>
                 )}
             </header>
 
-            {/* Markdown Content */}
-            <article className="prose prose-invert prose-sm sm:prose-base md:prose-lg max-w-none">
+            <article className="prose prose-zine prose-base mt-14 max-w-[72ch] md:prose-lg lg:mt-20">
                 <MDXRemote
                     source={update.content}
                     options={{

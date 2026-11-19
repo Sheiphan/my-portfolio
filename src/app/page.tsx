@@ -1,49 +1,85 @@
-"use client";
-
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import HeroAgent from "@/components/sketch/HeroAgent";
+import ScrollDoodle from "@/components/sketch/ScrollDoodle";
+import DrawOnView from "@/components/sketch/DrawOnView";
+import ProjectCard from "@/components/ProjectCard";
+import UpdateItem from "@/components/UpdateItem";
+import { getAllProjects, getAllUpdates } from "@/lib/content";
 
 export default function Home() {
+  const projects = getAllProjects().slice(0, 2);
+  const updates = getAllUpdates().slice(0, 2);
+
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-200px)] px-4 sm:px-6">
-      <section className="text-center max-w-3xl w-full">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-gray-100 leading-tight"
-        >
-          Hi, I&apos;m Sheiphan Joseph
-        </motion.h1>
+    <>
+    <section className="hero" aria-labelledby="hero-title">
+      <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,38rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,42rem)] xl:gap-12">
+        <div className="draw-load">
+          <h1 id="hero-title">
+            <span className="hero-hello">Hi, I&apos;m</span>
+            <span className="hero-name mt-2">
+              <span className="highlight" style={{ "--swipe-delay": "350ms" } as React.CSSProperties}>
+                <span data-flock-text="">Sheiphan</span>
+              </span>
+            </span>
+            <span className="hero-name">
+              <span data-flock-text="">Joseph</span>
+            </span>
+          </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-base sm:text-lg md:text-xl text-gray-300 mb-6 sm:mb-8 leading-relaxed"
-        >
-          Innovative AI Engineer specializing in agentic AI and foundation models like GPT-4o, Gemini, and Deepseek.
-          I build multimodal, autonomous AI systems and orchestrate complex multi-agent workflows with LangChain and LangGraph.
-          Passionate about leveraging AI agents for autonomous problem-solving, self-healing pipelines, and scalable production-ready solutions.
-        </motion.p>
+          <p className="hero-intro mt-8">
+            Innovative AI Engineer specializing in agentic AI and foundation models like GPT-4o, Gemini, and Deepseek.
+            I build multimodal, autonomous AI systems and orchestrate complex multi-agent workflows with LangChain and LangGraph.
+            Passionate about leveraging AI agents for autonomous problem-solving, self-healing pipelines, and scalable production-ready solutions.
+          </p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <Link href="/projects">
-            <Button
-              size="lg"
-              className="bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-neutral-900 text-base sm:text-lg"
-              aria-label="Navigate to projects page"
-            >
+          <div className="mt-9 flex flex-wrap items-center gap-5">
+            <a href="mailto:sheiphanshaijan@gmail.com" className="btn-sticker" data-mascot="grin">
+              Email me
+            </a>
+            <Link href="/projects" className="btn-outline">
               View My Projects
-            </Button>
-          </Link>
-        </motion.div>
-      </section>
-    </div>
+            </Link>
+          </div>
+        </div>
+
+        <HeroAgent />
+      </div>
+    </section>
+
+    <ScrollDoodle className="ml-[8%] -mt-4" />
+
+    <section aria-labelledby="home-projects" className="mt-6">
+      <DrawOnView className="section-head">
+        <h2 id="home-projects" className="section-title">
+          <span className="highlight">Projects</span>
+        </h2>
+        <Link href="/projects" className="text-link">
+          View My Projects
+        </Link>
+      </DrawOnView>
+      <div className="mt-10 grid gap-x-12 gap-y-20 md:grid-cols-2">
+        {projects.map((project, index) => (
+          <ProjectCard key={project.slug} project={project} index={index} headingLevel="h3" />
+        ))}
+      </div>
+    </section>
+
+    <section aria-labelledby="home-updates" className="mt-28 lg:mt-36">
+      <DrawOnView className="section-head">
+        <h2 id="home-updates" className="section-title">
+          <span className="highlight">Updates</span>
+        </h2>
+        <Link href="/updates" className="text-link">
+          Read all updates
+        </Link>
+      </DrawOnView>
+      <div className="mt-6">
+        {updates.map((update) => (
+          <UpdateItem key={update.slug} update={update} headingLevel="h3" />
+        ))}
+      </div>
+    </section>
+    </>
   );
 }

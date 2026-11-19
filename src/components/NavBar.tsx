@@ -3,145 +3,121 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import ThemeToggle from "./ThemeToggle";
+import FlockToggle from "./FlockToggle";
+
+const LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/projects", label: "Projects" },
+  { href: "/experience", label: "Experience" },
+  { href: "/updates", label: "Updates" },
+];
+
+const EMAIL = "mailto:sheiphanshaijan@gmail.com";
+
+function Squiggle() {
+  return (
+    <svg className="squiggle" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true">
+      <path
+        d="M2 6 C15 2 25 9 38 5 S62 2 75 6 S92 8 98 4"
+        pathLength={1}
+        className="ink-stroke"
+        fill="none"
+        stroke="var(--color-pink)"
+        strokeWidth={3}
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
 export default function NavBar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isActive = (path: string) => {
-    return pathname === path;
-  };
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname?.startsWith(`${href}/`);
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
-
-  const closeMobileMenu = () => {
-    setMobileMenuOpen(false);
-  };
+  const closeMobileMenu = () => setMobileMenuOpen(false);
 
   return (
-    <nav className="sticky top-0 z-50 bg-neutral-900/95 backdrop-blur-sm border-b border-neutral-800" aria-label="Main navigation">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo/Name */}
-          <Link 
-            href="/" 
-            className="text-xl font-bold text-gray-100 hover:text-blue-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-neutral-900 rounded-sm px-1"
-            aria-label="Home - Sheiphan Joseph Portfolio"
-          >
-            Sheiphan Joseph
-          </Link>
+    <header className="site-header sticky top-0 z-50">
+      <nav
+        className="mx-auto flex h-[68px] max-w-[1440px] items-center gap-4 px-4 sm:px-8 md:h-[76px] lg:px-14"
+        aria-label="Main navigation"
+      >
+        <Link href="/" className="wordmark" onClick={closeMobileMenu}>
+          Sheiphan Joseph
+        </Link>
 
-          {/* Mobile menu button */}
-          <button
-            type="button"
-            className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-300 hover:text-blue-400 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-400 transition-colors duration-200"
-            aria-expanded={mobileMenuOpen}
-            aria-controls="mobile-menu"
-            aria-label="Toggle navigation menu"
-            onClick={toggleMobileMenu}
-          >
-            <span className="sr-only">{mobileMenuOpen ? "Close menu" : "Open menu"}</span>
-            {/* Hamburger icon */}
-            {!mobileMenuOpen ? (
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+        <ul className="ml-auto hidden items-center gap-1 md:flex">
+          {LINKS.map((link) => (
+            <li key={link.href}>
+              <Link href={link.href} className="nav-link" aria-current={isActive(link.href) ? "page" : undefined}>
+                {link.label}
+                <Squiggle />
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <a href={EMAIL} className="btn-sticker is-yellow btn-small ml-auto hidden sm:inline-flex md:ml-5" data-mascot="grin">
+          Email me
+        </a>
+
+        <FlockToggle />
+        <span className="ml-auto flex sm:ml-0">
+          <ThemeToggle />
+        </span>
+
+        <button
+          type="button"
+          className="menu-button md:hidden"
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-menu"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+        >
+          <span className="sr-only">{mobileMenuOpen ? "Close menu" : "Open menu"}</span>
+          <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            {mobileMenuOpen ? (
+              <path strokeLinecap="round" strokeWidth={2.5} d="M6 18 18 6M6 6l12 12" />
             ) : (
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <path strokeLinecap="round" strokeWidth={2.5} d="M4 7c5-1 11 1 16 0M4 12.5c6-1 10 1 16-.5M4 18c5-1 11 .5 16 0" />
             )}
-          </button>
+          </svg>
+        </button>
+      </nav>
 
-          {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center gap-6 lg:gap-8">
-            <Link
-              href="/"
-              className={`relative text-sm font-medium transition-colors duration-200 hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-neutral-900 rounded-sm px-1 ${
-                isActive("/") ? "text-blue-400" : "text-gray-300"
-              }`}
-              aria-current={isActive("/") ? "page" : undefined}
-            >
-              Home
-              {isActive("/") && (
-                <span className="absolute -bottom-[21px] left-0 right-0 h-0.5 bg-blue-400" aria-hidden="true" />
-              )}
-            </Link>
-            <Link
-              href="/projects"
-              className={`relative text-sm font-medium transition-colors duration-200 hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-neutral-900 rounded-sm px-1 ${
-                isActive("/projects") || pathname?.startsWith("/projects/")
-                  ? "text-blue-400"
-                  : "text-gray-300"
-              }`}
-              aria-current={isActive("/projects") || pathname?.startsWith("/projects/") ? "page" : undefined}
-            >
-              Projects
-              {(isActive("/projects") || pathname?.startsWith("/projects/")) && (
-                <span className="absolute -bottom-[21px] left-0 right-0 h-0.5 bg-blue-400" aria-hidden="true" />
-              )}
-            </Link>
-            <Link
-              href="/updates"
-              className={`relative text-sm font-medium transition-colors duration-200 hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-neutral-900 rounded-sm px-1 ${
-                isActive("/updates") || pathname?.startsWith("/updates/")
-                  ? "text-blue-400"
-                  : "text-gray-300"
-              }`}
-              aria-current={isActive("/updates") || pathname?.startsWith("/updates/") ? "page" : undefined}
-            >
-              Updates
-              {(isActive("/updates") || pathname?.startsWith("/updates/")) && (
-                <span className="absolute -bottom-[21px] left-0 right-0 h-0.5 bg-blue-400" aria-hidden="true" />
-              )}
-            </Link>
-          </div>
-        </div>
-      </div>
+      <svg className="block h-[6px] w-full" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 3 C200 1 400 5 600 3 S900 1 1000 3.5" fill="none" stroke="var(--color-ink)" strokeWidth={2} />
+      </svg>
 
-      {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden" id="mobile-menu">
-          <div className="px-2 pt-2 pb-3 space-y-1 border-t border-neutral-800 bg-neutral-900">
-            <Link
-              href="/"
-              onClick={closeMobileMenu}
-              className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 hover:text-blue-400 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-400 ${
-                isActive("/") ? "text-blue-400 bg-neutral-800" : "text-gray-300"
-              }`}
-              aria-current={isActive("/") ? "page" : undefined}
-            >
-              Home
-            </Link>
-            <Link
-              href="/projects"
-              onClick={closeMobileMenu}
-              className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 hover:text-blue-400 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-400 ${
-                isActive("/projects") || pathname?.startsWith("/projects/")
-                  ? "text-blue-400 bg-neutral-800"
-                  : "text-gray-300"
-              }`}
-              aria-current={isActive("/projects") || pathname?.startsWith("/projects/") ? "page" : undefined}
-            >
-              Projects
-            </Link>
-            <Link
-              href="/updates"
-              onClick={closeMobileMenu}
-              className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 hover:text-blue-400 hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-400 ${
-                isActive("/updates") || pathname?.startsWith("/updates/")
-                  ? "text-blue-400 bg-neutral-800"
-                  : "text-gray-300"
-              }`}
-              aria-current={isActive("/updates") || pathname?.startsWith("/updates/") ? "page" : undefined}
-            >
-              Updates
-            </Link>
-          </div>
+        <div id="mobile-menu" className="mobile-drawer md:hidden">
+          <ul className="flex flex-col px-4 py-2 sm:px-8">
+            {LINKS.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  onClick={closeMobileMenu}
+                  className="mobile-link"
+                  aria-current={isActive(link.href) ? "page" : undefined}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <a href={EMAIL} className="mobile-link" onClick={closeMobileMenu}>
+                Email me
+              </a>
+            </li>
+            <li>
+              <FlockToggle variant="row" />
+            </li>
+          </ul>
         </div>
       )}
-    </nav>
+    </header>
   );
 }

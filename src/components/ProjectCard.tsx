@@ -1,68 +1,48 @@
-"use client";
-
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Project } from '@/lib/content';
+import Doodle from '@/components/sketch/Doodle';
+import { doodleForProject } from '@/components/sketch/doodles';
+import DrawOnView from '@/components/sketch/DrawOnView';
 
 interface ProjectCardProps {
   project: Project;
   index?: number;
+  headingLevel?: 'h2' | 'h3';
 }
 
-export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
+/**
+ * A project page from the zine: its own doodled architecture in a hand-drawn
+ * frame, then the facts. The whole plate opens the project; the title is the
+ * link's accessible name. Hovering redraws the doodle and lands a few agents
+ * on the frame.
+ */
+export default function ProjectCard({ project, index = 0, headingLevel = 'h2' }: ProjectCardProps) {
+  const Heading = headingLevel;
+  const date = new Date(project.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      style={{ willChange: 'opacity, transform' }}
-    >
-      <Link 
-        href={`/projects/${project.slug}`} 
-        className="block group focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-neutral-900 rounded-xl"
-        aria-label={`View details for ${project.title}`}
-      >
-        <motion.div
-          whileHover={{ y: -8, scale: 1.02 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          style={{ willChange: 'transform' }}
-        >
-          <Card className="h-full border-neutral-700 bg-neutral-800/50 backdrop-blur hover:shadow-xl hover:shadow-blue-500/10 transition-shadow duration-300 overflow-hidden">
-            <CardHeader>
-              <CardTitle className="text-lg sm:text-xl group-hover:text-blue-400 transition-colors duration-300">
-                {project.title}
-              </CardTitle>
-              <CardDescription className="text-sm text-gray-400">
-                <time dateTime={project.date}>
-                  {new Date(project.date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </time>
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm sm:text-base text-gray-300 line-clamp-3">
-                {project.description}
-              </p>
-              <div className="flex flex-wrap gap-2" role="list" aria-label="Technologies used">
-                {project.tech.map((tech) => (
-                  <span
-                    key={tech}
-                    role="listitem"
-                    className="px-2.5 py-1 text-xs font-medium bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/20"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </Link>
-    </motion.div>
+    <DrawOnView as="article" redraw className="plate group relative">
+      <div className="plate-frame" data-perch="">
+        <Doodle kind={doodleForProject(project.slug)} seed={index + 2} className="mx-auto max-w-[440px]" />
+      </div>
+      <div className="mt-6 px-1">
+        <Heading className="plate-title">
+          <Link href={`/projects/${project.slug}`} className="stretched-link">
+            <span className="title-mark">{project.title}</span>
+          </Link>
+        </Heading>
+        <p className="mt-1.5 text-[0.95rem] text-[var(--color-ink-muted)]">
+          <time dateTime={project.date}>{date}</time>
+        </p>
+        <p className="mt-3 line-clamp-3 text-[var(--color-ink-soft)]">{project.description}</p>
+        <ul className="mt-4 flex flex-wrap gap-2" aria-label="Technologies used">
+          {project.tech.map((tech) => (
+            <li key={tech} className="tool-chip">
+              {tech}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </DrawOnView>
   );
 }
